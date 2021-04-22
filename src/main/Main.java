@@ -1,14 +1,15 @@
 package main;
 
 
-import java.util.ArrayList;
 import java.util.Scanner;
+import contact_matching.Contact;
 
 public class Main {
 
     public static void main(String[] args) {
-        Contact contact = new Contact("D:/kiki-IE/contact_matching/src/contact.txt");
-//        Contact contact = new Contact();
+        Contact contact = new Contact("D:/kiki-IE/contact_matching/src/contact_test.txt");
+        /* Contact contact = new Contact(); */
+        contact.printTokenized();
         Scanner sc= new Scanner(System.in);
 
         while (true) {

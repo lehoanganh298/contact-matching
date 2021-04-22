@@ -1,4 +1,4 @@
-package main;
+package contact_matching;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,6 +31,11 @@ public class Contact {
     public void print() {
         for (String name: contact) {
             System.out.println(name);
+        }
+    }
+    public void printTokenized() {
+        for (var tl: contactTokenized) {
+            System.out.println(tl);
         }
     }
 

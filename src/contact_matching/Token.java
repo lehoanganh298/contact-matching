@@ -1,4 +1,4 @@
-package main;
+package contact_matching;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -9,7 +9,10 @@ public class Token {
         this.token = s;
     }
 
-
+    @Override
+    public String toString() {
+        return this.token;
+    }
     void lowercase() {
         this.token = this.token.toLowerCase(Locale.ROOT);
     }
@@ -18,9 +21,10 @@ public class Token {
     // Input: single word lower case
     void yToi() {
         String consonants = "bcdđghklmnpqrstvx";
-        if (token.length()>=2 && token.charAt(token.length()-1)=='y'
+        if (token.length()>=2 && Tone.removeTone(token.charAt(token.length()-1))=='y'
         && consonants.contains(Character.toString(token.charAt(token.length()-2))))
-            token=token.substring(0,token.length()-1)+"i";
+            token=token.substring(0,token.length()-1)+
+                    Character.toString(Tone.addTone('i',Tone.getTone(token.charAt(token.length()-1))));
     }
 
     void numberToString() {
