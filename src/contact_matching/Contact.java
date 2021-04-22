@@ -13,7 +13,14 @@ public class Contact {
         contact = new ArrayList<String>();
         contactTokenized = new ArrayList<TokenList>();
     }
-
+    public Contact(ArrayList<String> nameList) {
+        contact = new ArrayList<String>();
+        contactTokenized = new ArrayList<TokenList>();
+        for (String name : nameList) {
+            contact.add(name);
+            contactTokenized.add(new TokenList(name.toLowerCase(Locale.ROOT)));
+        }
+    }
     public Contact(String contactFile) {
         contact = new ArrayList<String>();
         contactTokenized = new ArrayList<TokenList>();
