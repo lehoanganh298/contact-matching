@@ -14,7 +14,7 @@ public class TokenList {
     TokenList(String str) {
         this.tokenList = new ArrayList<Token>();
 
-        var split = str.split("[\\s\\.()\\-_]");
+        var split = str.split("[\\s\\.()\\-\\/\\*\\;\\:\\,\\_]");
         for (String w: split) {
             if (w.length()>0) {
                 Token t = new Token(w);
