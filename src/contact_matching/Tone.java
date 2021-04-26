@@ -63,13 +63,8 @@ public class Tone {
     public static float compareCharacter(char c1, char c2) {
         if (c1 == c2)
             return 1F;
-
-        if (removeTone(c1)==removeTone(c2)) {
-            if (getTone(c1) == getTone(c2))
-                return 1F;
-            else
-                return 0.6F;
-        }
+        if (removeTone(c1)==removeTone(c2))
+            return 0.7F;
         if (removeAllTone(c1)==removeAllTone(c2))
             return 0.3F;
         return -1F;

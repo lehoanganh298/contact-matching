@@ -1,7 +1,10 @@
 package contact_matching;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+
+import static java.lang.Math.min;
 
 public class Token {
     String token;
@@ -53,18 +56,26 @@ public class Token {
         resolveAbbreviation();
     }
 
+    String removeAllTone() {
+        StringBuilder sb = new StringBuilder();
+        for (char c: this.token.toCharArray()) {
+            sb.append(Tone.removeAllTone(c));
+        }
+        return sb.toString();
+    }
+
     Float matchToken(Token t) {
         if (this.token.length()!=t.token.length())
             return -1F;
-        float sum_score = 0F;
+        float minScore = 1F;
         for (int i=0;i<this.token.length();i++) {
-            float matching_score = Tone.compareCharacter(this.token.charAt(i),t.token.charAt(i));
+            float matchingScore = Tone.compareCharacter(this.token.charAt(i),t.token.charAt(i));
 
-            if (matching_score<0)
+            if (matchingScore<0)
                 return -1F;
             else
-                sum_score+=matching_score;
+                minScore = min(minScore,matchingScore);
         }
-        return sum_score/this.token.length();
+        return minScore;
     }
 }

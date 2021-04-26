@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static java.lang.Math.min;
+
 public class contactMatchingTest {
     class TestCase {
         String query;
@@ -30,11 +32,11 @@ public class contactMatchingTest {
     }
 
     contactMatchingTest() throws FileNotFoundException {
-        contact = new Contact("D:/kiki-IE/contact_matching/src/contact_test.txt");
+        contact = new Contact("D:/contact_matching/src/contact_test.txt");
 //        Assertions.assertEquals(contact.length(),15);
 
         testcases = new ArrayList<>();
-        File file = new File("D:/kiki-IE/contact_matching/src/test_cases.txt");
+        File file = new File("D:/contact_matching/src/test_cases.txt");
         Scanner sc = new Scanner(file);
         while (sc.hasNextLine()) {
             String query = sc.nextLine();
@@ -53,13 +55,20 @@ public class contactMatchingTest {
     public void testContactMatching(){
         for (var testcase: testcases) {
             var result = contact.query(testcase.query);
-            if (testcase.expectedResult.size()<3){
-                Assertions.assertEquals(result.size(),testcase.expectedResult.size());
+            if (testcase.expectedResult.size()<3 || result.size()<3){
+                try {
+                    Assertions.assertEquals(result.size(), testcase.expectedResult.size());
+                }
+                catch (AssertionError e) {
+                    System.out.println("Length not match:" + testcase.expectedResult.size() + " - " + result.size());
+                }
             }
+            System.out.println("Query: " + testcase.query);
 
-            for (int i=0;i<testcase.expectedResult.size();i++) {
+            for (int i=0;i<min(testcase.expectedResult.size(),3);i++) {
                 try {
                     Assertions.assertEquals(result.get(i).index,testcase.expectedResult.get(i)-1);
+                    System.out.println("Result " + result.get(i).name + " "+result.get(i).matchingScore);
                 }
                 catch (AssertionError e) {
                     System.out.println("Query: " + testcase.query);
@@ -67,6 +76,7 @@ public class contactMatchingTest {
                     throw e;
                 }
             }
+            System.out.println();
         }
     }
 }

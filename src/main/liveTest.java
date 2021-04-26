@@ -3,6 +3,7 @@ package main;
 
 import java.util.Scanner;
 import contact_matching.Contact;
+import contact_matching.TokenList;
 
 public class liveTest {
 

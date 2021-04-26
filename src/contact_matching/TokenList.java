@@ -1,6 +1,9 @@
 package contact_matching;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class TokenList {
     ArrayList<Token> tokenList;
@@ -29,29 +32,80 @@ public class TokenList {
             result+=token.toString()+"|";
         return result;
     }
+
+    public HashMap<String, ArrayList<Integer>> toTokenMap() {
+        HashMap<String, ArrayList<Integer>> map = new HashMap<>();
+        for (int i=0;i<this.tokenList.size();i++) {
+            var tk = this.tokenList.get(i);
+            String strToneRemoved = tk.removeAllTone();
+            if (map.containsKey(strToneRemoved))
+                map.get(strToneRemoved).add(i);
+            else
+                map.put(strToneRemoved,new ArrayList<>(List.of(i)));
+        }
+        return map;
+    }
+
     // Match this tokenList with tokenList tl2
     // if not match, return -1
     // if match, return score in [0,1]
-    // Current rule: all token in this tokenList must be contained in tl2
-    //              score = sum score of each token pair / this tl length
+    // Current: only match each token to the first token that match
     public float match(TokenList tl2) {
-        float sumScore = 0.0F;
-        int keepOrder = 0;
-        int matchingPosDiff = 0;
-        for (Token tk: this.tokenList) {
-            boolean hasToken = Boolean.FALSE;
-            for (Token tk2:tl2.tokenList) {
-                float matchScore = tk.matchToken(tk2);
-                if (matchScore>0) {
-                    hasToken=Boolean.TRUE;
-                    sumScore+=matchScore;
-                }
+        var tokenMap = this.toTokenMap();
+        var tokenMap2 = tl2.toTokenMap();
+        boolean contain = Boolean.TRUE;
+        boolean matchExact = Boolean.TRUE;
+        boolean keepOrder = Boolean.TRUE;
+        var totalIndexDiffSet = new HashSet<Integer>();
+        boolean diffIndexJustInitialized = Boolean.TRUE;
+        float sumScore = 0F;
+
+        for (var item: tokenMap.entrySet()) {
+            var idxTl1 = item.getValue();
+            var idxTl2 = tokenMap2.getOrDefault(item.getKey(),new ArrayList<>());
+            if (idxTl2.size()<item.getValue().size()) {
+                contain = Boolean.FALSE;
+                break;
             }
-            if (!hasToken)
-                return -1F;
+            if (matchExact && idxTl2.size()!= idxTl1.size()) {
+                matchExact = Boolean.FALSE;
+            }
+            if (keepOrder) {
+                for (int idx1: idxTl1) {
+                    var diffIndexSet = new HashSet<Integer>();
+                    for (int idx2: idxTl2)
+                        diffIndexSet.add(idx1-idx2);
+
+                    if (diffIndexJustInitialized) {
+                        totalIndexDiffSet.addAll(diffIndexSet);
+                        diffIndexJustInitialized=Boolean.FALSE;
+                    }
+                    else {
+                        totalIndexDiffSet.retainAll(diffIndexSet);
+                        if (totalIndexDiffSet.size()==0)
+                            keepOrder=Boolean.FALSE;
+                    }
+                }
+
+            }
+            for (int i=0;i<idxTl1.size();i++) {
+                sumScore+=this.tokenList.get(idxTl1.get(i)).matchToken(tl2.tokenList.get(idxTl2.get(i)));
+            }
         }
-        return sumScore/this.tokenList.size();
+        if (tokenMap.size()!=tokenMap2.size())
+            matchExact=Boolean.FALSE;
+        if (!contain)
+            return -1F;
+        if (matchExact && keepOrder)
+            return sumScore/this.tokenList.size();
+        if (matchExact && !keepOrder)
+            return sumScore/this.tokenList.size()*0.7F;
+        if (!matchExact && keepOrder)
+            return sumScore/this.tokenList.size()*this.tokenList.size()/tl2.tokenList.size();
+
+        return sumScore/this.tokenList.size()*this.tokenList.size()/tl2.tokenList.size() * 0.7F;
     }
+
 //    public float matchWithOrder(TokenList tl2) {
 //        float sumScore = 0.0F;
 //        int matchWithOrder = 0;

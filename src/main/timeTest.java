@@ -29,15 +29,15 @@ public class timeTest {
 
         /* … The code being measured starts … */
         int numQuery = 100;
-        String[] query = {"anh đức","anh tuấn","chị năm","anh khải","anh khãi","my phương","phương vi","anh tuấn"};
-        for (int i=0;i<numQuery;i++) {
+        String[] query = {"anh đức", "anh tuấn", "chị năm", "anh khải", "anh khãi", "my phương", "phương vi", "anh tuấn"};
+        for (int i = 0; i < numQuery; i++) {
             long startTime1 = System.nanoTime();
 
             Contact contact = new Contact(nameList);
-            var result = contact.query(query[i%query.length]);
+            var result = contact.query(query[i % query.length]);
             long endTime1 = System.nanoTime();
-            if (i%10==0)
-                System.out.println("Query " +i + " : " + (double)(endTime1-startTime1)/1000000);
+            if (i % 10 == 0)
+                System.out.println("Query " + i + " : " + (double) (endTime1 - startTime1) / 1000000);
 
 
         }
@@ -48,6 +48,6 @@ public class timeTest {
         // get the difference between the two nano time values
         long timeElapsed = endTime - startTime;
 
-        System.out.println("Time each query in miliseconds: " + (double)timeElapsed/numQuery);
+        System.out.println("Time each query in miliseconds: " + (double) timeElapsed / numQuery);
     }
 }
