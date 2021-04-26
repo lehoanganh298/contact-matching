@@ -1,0 +1,21 @@
+match 100%: 1.0
+
+word level:
+tone: ?`~. -0.3 (only once)
+character tone ê ư ô...: -0.4 (only once)
+
+word list level:
+match every word, with order --> sum_score(all word))/len
+match every word, wrong order --> sum_score(all word))/len * 0.7
+match inside, with order --> sum_score(all word))/len * match_len/len
+match inside, wrong order --> sum_score(all word))/len * match_len/len * 0.7
+
+---------
+Abbreviation:
+A. A --> anh
+C. C --> chị
+VT --> viettel
+-----------
+5 -- năm (1-20)
+12A -- 12 A
+NH -- N H
