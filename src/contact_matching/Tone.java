@@ -60,13 +60,28 @@ public class Tone {
         return c;
     }
 
+    // Matching policy:
+    // c1 no tone ==> c2 no tone || have tone
+    // c1 have tone ==> c2 no tone || match tone
     public static float compareCharacter(char c1, char c2) {
-        if (c1 == c2)
+        if (c1 == c2) // match exact
             return 1F;
-        if (removeTone(c1)==removeTone(c2))
-            return 0.7F;
-        if (removeAllTone(c1)==removeAllTone(c2))
-            return 0.3F;
+        if (removeAllTone(c1)==c1){ //c1=Tu
+            if (removeTone(c1)==removeTone(c2)) //c1=Tu, c2=Tú
+                return 0.7F;
+            if (removeAllTone(c1)==removeAllTone(c2)) //c1=Tu, c2=Tư,Tứ
+                return 0.3F;
+        }
+        else if (removeTone(c1)==c1) { //c1=Tư
+            if (removeTone(c1)==removeTone(c2) //c1=Tư, c2=Tứ
+                || removeAllTone(c2)==c2 && removeAllTone(c1)==removeAllTone(c2)) //c1=Tư, c2=Tu
+                return 0.7F;
+        }
+        else { // c1=Tứ
+            if (removeAllTone(c2)==c2 && removeAllTone(c1)==removeAllTone(c2)) //c1=Tứ, c2=Tu
+                return 0.3F;
+            // c1=Tứ, c2=Tú not match
+        }
         return -1F;
     }
 }
